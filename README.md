@@ -71,7 +71,7 @@ H: Gin中的一个语法，相当于map[string]{interface}
 
 > go get -u github.com/jinzhu/gorm
 
-
+#### 配置文件
 
 ## Go语法相关
 
@@ -116,3 +116,17 @@ go 1.17
 上面是模块名，下面是Go的版本
 
 ### 结构体
+
+与C++中结构体类似，Go中同样有结构体的定义
+
+```go
+type User struct {
+    gorm.Model
+    Name      string `gorm:"type:varchar(20);not null"`
+    Telephone string `gorm:"varchar(10);not null;unique"`
+    Password  string `gorm:"size:255;not null"`
+}
+```
+
+可以看到对于数据库中结构体的定义，类似于SQL语言的Create Table.
+
