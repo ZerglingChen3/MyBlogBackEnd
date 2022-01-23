@@ -116,6 +116,26 @@ import (
     LIMIT 1
 ```
 
+### jwt
+
+主要用于token的发放和处理
+
+首先简单介绍一下token的使用方法：
+
+在服务器的身份验证时，当客户端使用用户名和密码登录之后，服务器收到请求之后会去验证用户名和密码。
+
+当验证通过之后，服务器会返回一个token用于验证，客户端需要保存这个token。
+
+在之后的每次请求需要携带这个token用于身份验证，服务器在拿到token之后可以直接验证是否正确，若正确则向客户端返回数据。
+
+#### 框架下载
+
+> go get github.com/dgrijalva/jwt-go
+
+#### Token组成
+
+@todo
+
 ## Go语法相关
 
 ### 项目入口
@@ -172,6 +192,12 @@ type User struct {
 
 可以看到对于结构体的定义，类似于SQL语言的Create Table.
 
+### 占位符
+
+在fmt中需要给特定的格式符合，下面介绍几种
+
+%v: 相应值的默认格式
+
 ## 项目结构
 
 为了方便整个项目更加容易维护，因此用文件夹将文件分离出来
@@ -201,7 +227,7 @@ routes.go: 所有的(路由/API)在这里初始化
 而在验证用户密码的使用，使用下面的方法对比HASH密码。
 
 ```go
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+    err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 ```
 
 如果返回err说明输入的密码并不正确。
