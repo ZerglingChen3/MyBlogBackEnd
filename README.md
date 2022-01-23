@@ -128,7 +128,7 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println("hello world!")
+    fmt.Println("hello world!")
 }
 ```
 
@@ -185,3 +185,23 @@ model: 数据库映射的结构体
 util: 方法类
 
 routes.go: 所有的(路由/API)在这里初始化
+
+## 基本功能创建
+
+### 登录功能
+
+这里需要注意一个问题就是在数据库中，用户的密码不能以明文存取。
+
+因此我们需要使用密文存取的方法，具体来说在创建用户的时候，需要使用下面的HASH函数。
+
+```go
+    encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+```
+
+而在验证用户密码的使用，使用下面的方法对比HASH密码。
+
+```go
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+```
+
+如果返回err说明输入的密码并不正确。
