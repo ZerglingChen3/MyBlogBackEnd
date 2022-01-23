@@ -67,11 +67,54 @@ H: Gin中的一个语法，相当于map[string]{interface}
 
 ### Gorm
 
+对于参与数据库的修改，我们需要引入gorm框架来方便对数据库内容进行修改。
+
 #### 框架下载
 
 > go get -u github.com/jinzhu/gorm
 
-#### 配置文件
+#### 框架引入
+
+```go
+import (
+    "gorm.io/driver/sqlite"
+    "gorm.io/gorm"
+)
+```
+
+#### 数据库相关操作
+
+##### 创建数据库
+
+```go
+  db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+```
+在这里db是创建的数据库，数据库存储文件为'test.db'，数据库配置文件这里用的是默认配置。
+
+##### 创建模式
+
+在创建数据库后，我们还需要创建对应的模式（或者说建表），使用下面的语句
+```go
+    err = db.AutoMigrate(&User{})
+```
+
+##### 查询语句
+
+查询电话号码是否在数据库中出现过
+
+```go
+    db.Where("telephone = ?", telephone).First(&user)
+```
+
+相当于下面的SQL语句：
+
+```sql
+    SELECT *
+    FROM user 
+    WHERE user.telephone = telephone
+    ORDER BY user.id
+    LIMIT 1
+```
 
 ## Go语法相关
 
@@ -121,12 +164,11 @@ go 1.17
 
 ```go
 type User struct {
-    gorm.Model
     Name      string `gorm:"type:varchar(20);not null"`
     Telephone string `gorm:"varchar(10);not null;unique"`
     Password  string `gorm:"size:255;not null"`
 }
 ```
 
-可以看到对于数据库中结构体的定义，类似于SQL语言的Create Table.
+可以看到对于结构体的定义，类似于SQL语言的Create Table.
 
