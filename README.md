@@ -172,3 +172,16 @@ type User struct {
 
 可以看到对于结构体的定义，类似于SQL语言的Create Table.
 
+## 项目结构
+
+为了方便整个项目更加容易维护，因此用文件夹将文件分离出来
+
+common: 数据库的创建和获得
+
+controller: 模型操作的控制
+
+model: 数据库映射的结构体
+
+util: 方法类
+
+routes.go: 所有的(路由/API)在这里初始化
