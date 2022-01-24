@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"myBlog/common"
+	"myBlog/dto"
 	"myBlog/model"
 	"myBlog/util"
 	"net/http"
@@ -101,7 +102,7 @@ func Info(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": 200,
-		"data": gin.H{"user": user}})
+		"data": gin.H{"user": dto.ToUserDto(user.(model.User))}})
 }
 
 func isTelephoneExists(db *gorm.DB, telephone string) bool {
