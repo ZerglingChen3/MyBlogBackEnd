@@ -250,3 +250,4 @@ err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 ```
 
 如果返回err说明输入的密码并不正确。
+
