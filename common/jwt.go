@@ -18,10 +18,10 @@ func ReleaseToken(user model.User) (string, error) {
 	claims := &Claims{
 		UserId: user.ID,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
-			IssuedAt:  time.Now().Unix(),
-			Issuer:    "ZerglingChen3",
-			Subject:   "user token",
+			ExpiresAt: expirationTime.Unix(), // Time to expire
+			IssuedAt:  time.Now().Unix(),     // Time to issue
+			Issuer:    "ZerglingChen3",       // Who issue
+			Subject:   "user token",          // Type
 		},
 	}
 

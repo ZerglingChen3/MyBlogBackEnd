@@ -134,7 +134,11 @@ import (
 
 #### Token组成
 
-@todo
+头部(Header): 标记类型和使用的协议
+
+有效载荷(Playload): 存放包括签发者、签发时间、过期时间等需要写入token中的信息
+
+签名(signature): 将Header和Playload拼接起来通过Base64编码和加密算法HS256和秘钥拼接到JWT的后面
 
 ## Go语法相关
 
