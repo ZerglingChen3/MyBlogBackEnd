@@ -225,6 +225,8 @@ middleware: 中间件相关组件
 
 dto: 数据过滤
 
+response: HTTP封装
+
 util: 方法类
 
 routes.go: 所有的(路由/API)在这里初始化

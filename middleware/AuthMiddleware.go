@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
+	"myBlog/Response"
 	"myBlog/common"
 	"myBlog/model"
 	"net/http"
@@ -13,7 +14,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		tokenString := ctx.GetHeader("Authorization")
 
 		if tokenString == "" || !strings.HasPrefix(tokenString, "Bearer ") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"code": 401, "msg": "Permission Error!"})
+			Response.Response(ctx, http.StatusUnauthorized, 401, nil, "Permission Error!")
 			ctx.Abort()
 			return
 		}
@@ -23,7 +24,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		token, claims, err := common.ParseToken(tokenString)
 
 		if err != nil || !token.Valid {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"code": 401, "msg": "Permission Error!"})
+			Response.Response(ctx, http.StatusUnauthorized, 401, nil, "Permission Error!")
 			ctx.Abort()
 			return
 		}
@@ -34,7 +35,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		db.First(&user, userId)
 
 		if user.ID == 0 {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"code": 401, "msg": "Permission Error!"})
+			Response.Response(ctx, http.StatusUnauthorized, 401, nil, "Permission Error!")
 			ctx.Abort()
 			return
 		}

@@ -5,6 +5,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"log"
+	"myBlog/Response"
 	"myBlog/common"
 	"myBlog/dto"
 	"myBlog/model"
@@ -19,12 +20,12 @@ func Register(ctx *gin.Context) {
 	password := ctx.PostForm("password")
 
 	if len(telephone) != 11 {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "Telephone Must Be 11!"})
+		Response.Response(ctx, http.StatusUnprocessableEntity, 422, nil, "Telephone Must Be 11!")
 		return
 	}
 
 	if len(password) < 6 {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "Password Should Not Less Than 6!"})
+		Response.Response(ctx, http.StatusUnprocessableEntity, 422, nil, "Password Should Not Less Than 6!")
 		return
 	}
 
@@ -33,14 +34,14 @@ func Register(ctx *gin.Context) {
 	}
 
 	if isTelephoneExists(db, telephone) {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "Telephone Exists!"})
+		Response.Response(ctx, http.StatusUnprocessableEntity, 422, nil, "Telephone Exists!")
 		return
 	}
 
 	// Create User
 	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "Encryption Error!"})
+		Response.Response(ctx, http.StatusUnprocessableEntity, 500, nil, "Encryption Error!")
 		return
 	}
 
@@ -51,9 +52,7 @@ func Register(ctx *gin.Context) {
 	}
 	db.Create(&newUser)
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"code": 200,
-		"msg":  "Register OK!"})
+	Response.Success(ctx, nil, "Register OK!")
 }
 
 func Login(ctx *gin.Context) {
@@ -63,46 +62,42 @@ func Login(ctx *gin.Context) {
 	password := ctx.PostForm("password")
 
 	if len(telephone) != 11 {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "Telephone Must Be 11!"})
+		Response.Response(ctx, http.StatusUnprocessableEntity, 422, nil, "Telephone Must Be 11!")
 		return
 	}
 
 	if len(password) < 6 {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "Password Should Not Less Than 6!"})
+		Response.Response(ctx, http.StatusUnprocessableEntity, 422, nil, "Password Should Not Less Than 6!")
+		return
 	}
 
 	var user model.User
 	db.Where("telephone = ?", telephone).First(&user)
 	if user.ID == 0 {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "User not exists!"})
+		Response.Response(ctx, http.StatusUnprocessableEntity, 422, nil, "User not exists!")
 		return
 	}
 
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"code": 400, "msg": "Wrong Password!"})
+		Response.Response(ctx, http.StatusBadRequest, 400, nil, "Wrong Password!")
 		return
 	}
 
 	token, err := common.ReleaseToken(user)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "System Error!"})
+		Response.Response(ctx, http.StatusInternalServerError, 500, nil, "System Error!")
 		log.Printf("token generate error : %v", err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"code": 200,
-		"data": gin.H{"token": token},
-		"msg":  "Login Successfully!"})
+	Response.Success(ctx, gin.H{"token": token}, "Login Successfully!")
 }
 
 func Info(ctx *gin.Context) {
 	user, _ := ctx.Get("user")
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"code": 200,
-		"data": gin.H{"user": dto.ToUserDto(user.(model.User))}})
+	Response.Success(ctx, gin.H{"user": dto.ToUserDto(user.(model.User))}, "")
 }
 
 func isTelephoneExists(db *gorm.DB, telephone string) bool {
