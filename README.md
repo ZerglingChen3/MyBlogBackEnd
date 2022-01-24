@@ -87,7 +87,7 @@ import (
 ##### 创建数据库
 
 ```go
-  db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 ```
 在这里db是创建的数据库，数据库存储文件为'test.db'，数据库配置文件这里用的是默认配置。
 
@@ -95,7 +95,7 @@ import (
 
 在创建数据库后，我们还需要创建对应的模式（或者说建表），使用下面的语句
 ```go
-    err = db.AutoMigrate(&User{})
+err = db.AutoMigrate(&User{})
 ```
 
 ##### 查询语句
@@ -103,17 +103,17 @@ import (
 查询电话号码是否在数据库中出现过
 
 ```go
-    db.Where("telephone = ?", telephone).First(&user)
+db.Where("telephone = ?", telephone).First(&user)
 ```
 
 相当于下面的SQL语句：
 
 ```sql
-    SELECT *
-    FROM user 
-    WHERE user.telephone = telephone
-    ORDER BY user.id
-    LIMIT 1
+SELECT *
+FROM user 
+WHERE user.telephone = telephone
+ORDER BY user.id
+LIMIT 1
 ```
 
 ### jwt
@@ -225,13 +225,13 @@ routes.go: 所有的(路由/API)在这里初始化
 因此我们需要使用密文存取的方法，具体来说在创建用户的时候，需要使用下面的HASH函数。
 
 ```go
-    encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 ```
 
 而在验证用户密码的使用，使用下面的方法对比HASH密码。
 
 ```go
-    err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 ```
 
 如果返回err说明输入的密码并不正确。
