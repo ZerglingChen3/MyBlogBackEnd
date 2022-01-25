@@ -217,6 +217,8 @@ type User struct {
 
 common: 数据库的创建和获得
 
+config: 配置文件
+
 controller: 模型操作的控制
 
 model: 数据库映射的结构体
