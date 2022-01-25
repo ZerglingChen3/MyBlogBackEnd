@@ -229,7 +229,7 @@ response: HTTP封装
 
 util: 方法类
 
-routes.go: 所有的(路由/API)在这里初始化
+routes.go: 所有的路由在这里初始化
 
 ## 基本功能创建
 
